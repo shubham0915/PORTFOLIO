@@ -35,7 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
 // Mobile Menu Toggle
 function toggleMobileMenu() {
     const navLinks = document.querySelector('.nav-links');
+    const mobileMenuButton = document.querySelector('.mobile-menu');
     navLinks.classList.toggle('active');
+    if (mobileMenuButton) {
+        const isExpanded = navLinks.classList.contains('active');
+        mobileMenuButton.setAttribute('aria-expanded', String(isExpanded));
+    }
 }
 
 // Enhanced counter animation with easing
@@ -80,6 +85,15 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 behavior: 'smooth',
                 block: 'start'
             });
+
+            const navLinks = document.querySelector('.nav-links');
+            const mobileMenuButton = document.querySelector('.mobile-menu');
+            if (navLinks && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                if (mobileMenuButton) {
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                }
+            }
         }
     });
 });
@@ -148,20 +162,84 @@ function scrollToTop() {
     });
 }
 
-// Scroll Reveal Intersection Observer
+// Scroll Reveal Intersection Observer with per-section staggering
+const staggerMap = {};
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('active');
+            const el = entry.target;
+            if (prefersReducedMotion) {
+                el.style.transitionDuration = '0s';
+                el.style.animationDuration = '0s';
+            }
+
+            if (el.classList.contains('slide-in') && !el.classList.contains('active')) {
+                const group = el.closest('section')?.id || 'global';
+                const order = prefersReducedMotion ? 0 : (staggerMap[group] || 0);
+                const delay = prefersReducedMotion ? 0 : order * 120; // 120ms steps per element in the same section
+                el.style.transitionDelay = `${delay}ms`;
+                staggerMap[group] = order + 1;
+            }
+
+            // Ensure layout has applied before activating (prevents instant jump)
+            requestAnimationFrame(() => {
+                el.classList.add('active');
+            });
+            revealObserver.unobserve(el);
         }
     });
 }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.15,
+    rootMargin: '0px 0px -40px 0px'
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Skip the default reveal on the projects section; we’ll animate its contents separately
+    const projectsSection = document.querySelector('#projects');
+    if (projectsSection) {
+        projectsSection.classList.remove('reveal', 'active');
+    }
+
     document.querySelectorAll('.reveal').forEach(el => {
         revealObserver.observe(el);
+    });
+
+    // Apply left-to-right animation to full project cards only (observer-driven)
+    const projectCards = Array.from(document.querySelectorAll('#projects .project-card'));
+    projectCards.forEach((card) => {
+        card.classList.add('slide-in');
+        revealObserver.observe(card);
+    });
+
+    // Make the Hire/Collaborate email CTA more reliable (fallback copies email)
+    const hireEmailBtn = document.querySelector('#hire-email');
+    if (hireEmailBtn) {
+        hireEmailBtn.addEventListener('click', () => {
+            const mailto = hireEmailBtn.getAttribute('href');
+            if (mailto && navigator.clipboard) {
+                navigator.clipboard.writeText('shubhamkuya@gmail.com').catch(() => {});
+            }
+            // let the normal mailto navigation proceed; also force it in case the browser blocked it
+            setTimeout(() => {
+                if (mailto) {
+                    window.location.href = mailto;
+                }
+            }, 20);
+        });
+    }
+
+    // Close mobile nav with Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const navLinks = document.querySelector('.nav-links');
+            const mobileMenuButton = document.querySelector('.mobile-menu');
+            if (navLinks && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                if (mobileMenuButton) {
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                }
+            }
+        }
     });
 });

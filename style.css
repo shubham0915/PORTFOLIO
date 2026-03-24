@@ -65,12 +65,66 @@
     transform: translateY(0);
 }
 
+/* Left-to-right entrance for text */
+.slide-in {
+    opacity: 0;
+    transform: translateX(-40px);
+    will-change: transform, opacity;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease;
+}
+
+.slide-in.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .reveal,
+    .slide-in {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
     color: var(--text-primary);
     background: var(--bg-light);
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.skip-link {
+    position: absolute;
+    top: -48px;
+    left: 1rem;
+    background: var(--text-primary);
+    color: var(--bg-white);
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    z-index: 3000;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 0.75rem;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 3px;
 }
 
 .container {
@@ -176,6 +230,8 @@ nav {
     cursor: pointer;
     font-size: 1.5rem;
     color: var(--text-primary);
+    background: none;
+    border: none;
 }
 
 /* Add interactive data visualization background */
@@ -253,6 +309,7 @@ nav {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 20%;
     border-radius: 50%;
     transition: transform 0.3s ease;
 }
@@ -281,11 +338,19 @@ nav {
 
 .tagline {
     font-size: 1.25rem;
-    margin-bottom: 3rem;
+    margin-bottom: 0.8rem;
     opacity: 0.9;
     font-weight: 400;
     opacity: 0;
     animation: fadeInUp 1s ease 0.4s forwards;
+}
+
+.hero-subline {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 2.25rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
 }
 
 .hero-cta {
@@ -295,6 +360,25 @@ nav {
     flex-wrap: wrap;
     opacity: 0;
     animation: fadeInUp 1s ease 0.6s forwards;
+}
+
+.hero-highlights {
+    margin-top: 1.3rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.hero-highlight {
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: white;
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
 }
 
 .cta-button {
@@ -377,6 +461,15 @@ nav {
     border-radius: 2px;
 }
 
+.section-subtitle {
+    text-align: center;
+    margin: -1rem auto 0;
+    max-width: 760px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
 .about-content {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -393,6 +486,16 @@ nav {
 
 .about-text p {
     margin-bottom: 1.5rem;
+}
+
+.about-points {
+    margin: 0 0 1.8rem 1.1rem;
+    color: var(--text-secondary);
+}
+
+.about-points li {
+    margin-bottom: 0.55rem;
+    line-height: 1.55;
 }
 
 .social-links {
@@ -761,6 +864,27 @@ nav {
     line-height: 1.6;
 }
 
+.project-skimline {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    line-height: 1.45;
+}
+
+.project-result {
+    margin-bottom: 1.25rem;
+    padding: 0.75rem 1rem;
+    border-left: 3px solid var(--primary-color);
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--text-primary);
+    border-radius: 10px;
+    line-height: 1.5;
+}
+
+.project-result strong {
+    color: var(--primary-color);
+}
+
 .project-skills {
     display: flex;
     flex-wrap: wrap;
@@ -835,6 +959,20 @@ nav {
     color: white;
 }
 
+.project-card,
+.resume-card,
+.contact-form,
+.timeline-content {
+    transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+.resume-card:hover,
+.contact-form:hover,
+.timeline-content:hover {
+    box-shadow: var(--shadow-heavy);
+    border-color: rgba(37, 99, 235, 0.25);
+}
+
 /* Resume Section */
 .resume {
     padding: 6rem 0;
@@ -850,6 +988,33 @@ nav {
     max-width: 500px;
     margin: 3rem auto 0;
     border: 1px solid var(--border-color);
+}
+
+.credibility-grid {
+    margin: 1.75rem 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.credibility-item {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.9rem 0.75rem;
+}
+
+.credibility-number {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.credibility-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
 }
 
 .resume-icon {
@@ -1065,6 +1230,32 @@ nav {
     line-height: 1.6;
 }
 
+.availability-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(16, 185, 129, 0.12);
+    color: #047857;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 999px;
+    padding: 0.55rem 0.85rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.contact-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0 0 1.25rem;
+}
+
+.contact-cta .cta-button {
+    padding: 0.8rem 1.25rem;
+    font-size: 0.92rem;
+}
+
 .contact-links {
     display: flex;
     flex-direction: column;
@@ -1266,9 +1457,18 @@ footer {
         font-size: 1.125rem;
     }
 
+    .hero-subline {
+        font-size: 0.95rem;
+        margin-bottom: 1.6rem;
+    }
+
     .hero-cta {
         flex-direction: column;
         align-items: center;
+    }
+
+    .hero-highlights {
+        gap: 0.6rem;
     }
 
     .about-content {
@@ -1307,6 +1507,19 @@ footer {
     .contact-content {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .credibility-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-cta {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .contact-cta .cta-button {
+        justify-content: center;
     }
 
     .container {
