@@ -119,7 +119,7 @@
             <div class="about-content">
                 <div class="stats">
                     <div class="stat-item">
-                        <div class="stat-number" data-target="5">0</div>
+                        <div class="stat-number" data-target="6+">0</div>
                         <div class="stat-label">Projects Completed</div>
                     </div>
                     <div class="stat-item">
@@ -157,77 +157,82 @@
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="skills reveal">
-        <div class="container">
-            <h2 class="section-title">Technical Skills</h2>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <div class="skill-icon">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <h3>Programming & Analysis</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">C++</span>
-                        <span class="skill-tag">Pandas</span>
-                        <span class="skill-tag">NumPy</span>
-                        <!-- <span class="skill-tag">Go Lang</span> -->
-                        <span class="skill-tag">Flask</span>
-                        <span class="skill-tag">Matplotlib</span>
-                        <span class="skill-tag">Seaborn</span>
-                        <span class="skill-tag">Scikit-learn</span>
-                        <span class="skill-tag">LangChain</span>
-                    </div>
+   <!-- Skills Section -->
+<section id="skills" class="skills reveal">
+    <div class="container">
+        <h2 class="section-title">Technical Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-category">
+                <div class="skill-icon">
+                    <i class="fas fa-code"></i>
                 </div>
-                <div class="skill-category">
-                    <div class="skill-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <h3>Databases</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">SQL</span>
-                        <span class="skill-tag">MySQL</span>
-                    </div>
-                </div>
-
-                
-
-                <div class="skill-category">
-                    <div class="skill-icon">
-                        <i class="fas fa-chart-pie"></i>
-                    </div>
-                    <h3>Visualization Tools</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Power BI</span>
-                        <span class="skill-tag">Excel</span>
-                        <span class="skill-tag">Pivot Tables</span>
-                        <span class="skill-tag">Dashboard</span>
-                        <span class="skill-tag">Slicers</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <div class="skill-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <h3>Statistics & ML</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">EDA</span>
-                        <span class="skill-tag">Hypothesis Testing</span>
-                        <span class="skill-tag">Feature Scaling</span>
-                        <span class="skill-tag">Supervised learning</span>
-                        <span class="skill-tag">UnSupervised learning</span>
-                        <span class="skill-tag">Ensembling techniques</span>
-
-                    </div>
+                <h3>Programming & Analysis</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Java</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">C++</span>
+                    <span class="skill-tag">Pandas</span>
+                    <span class="skill-tag">NumPy</span>
+                    <span class="skill-tag">FastAPI</span> <!-- Added -->
+                    <span class="skill-tag">Flask</span>
+                    <span class="skill-tag">Groq (Llama 3)</span> <!-- Added -->
+                    <span class="skill-tag">LangChain</span>
+                    <span class="skill-tag">Matplotlib</span>
+                    <span class="skill-tag">Seaborn</span>
                 </div>
             </div>
+            
+            <div class="skill-category">
+                <div class="skill-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>Databases & Storage</h3> <!-- Updated Title -->
+                <div class="skill-tags">
+                    <span class="skill-tag">SQL</span>
+                    <span class="skill-tag">MySQL</span>
+                    <span class="skill-tag">DuckDB</span> <!-- Added (Data Clean Room) -->
+                    <span class="skill-tag">ChromaDB</span> <!-- Added (Vector Database) -->
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="skill-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h3>Visualization Tools</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Power BI</span>
+                    <span class="skill-tag">Excel</span>
+                    <span class="skill-tag">Pivot Tables</span>
+                    <span class="skill-tag">Dashboard</span>
+                    <span class="skill-tag">Streamlit</span> <!-- Added (Frontend) -->
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="skill-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>Statistics & ML</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">EDA</span>
+                    <span class="skill-tag">Differential Privacy</span> <!-- Added -->
+                    <span class="skill-tag">XGBoost</span> <!-- Added -->
+                    <span class="skill-tag">Learning-to-Rank (LTR)</span> <!-- Added -->
+                    <span class="skill-tag">Vector Search</span> <!-- Added -->
+                    <span class="skill-tag">Supervised learning</span>
+                    <span class="skill-tag">Ensembling techniques</span>
+                </div>
+            </div>
+
+            
         </div>
-    </section>
+    </div>
+</section>
+
 
     <!-- Projects Section -->
-    <section id="projects" class="projects reveal">
+    <section id="projects" class="projects">
         <div class="container">
             <h2 class="section-title">Featured Projects</h2>
             <p class="section-subtitle">Selected work with clear business context, technical approach, and measurable outcomes.</p>
@@ -581,52 +586,6 @@
         </div>
     </section>
 
-    <!-- Blog Section -->
-    <!-- <section id="blog" class="blog">
-        <div class="container">
-            <h2 class="section-title">Latest Insights</h2>
-            <div class="blog-grid">
-                <div class="blog-card">
-                    <div class="blog-header">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">Analyzing E-Commerce Sales with SQL</h3>
-                        <p class="blog-summary">Deep dive into advanced SQL techniques for e-commerce analytics, including window functions, CTEs, and performance optimization strategies.</p>
-                        <a href="#" class="blog-link">
-                            Read More <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="blog-card">
-                    <div class="blog-header">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">5 Business Insights from Customer Segmentation</h3>
-                        <p class="blog-summary">How machine learning clustering algorithms revealed hidden customer patterns that drove a 25% increase in targeted marketing effectiveness.</p>
-                        <a href="#" class="blog-link">
-                            Read More <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="blog-card">
-                    <div class="blog-header">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">Building Interactive Dashboards in Power BI</h3>
-                        <p class="blog-summary">Step-by-step guide to creating compelling, interactive dashboards that tell a story and drive business decisions.</p>
-                        <a href="#" class="blog-link">
-                            Read More <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
 
     <!-- Contact Section -->
     <section id="contact" class="contact reveal">
