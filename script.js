@@ -17,6 +17,59 @@ function toggleTheme() {
     }
 }
 
+// Typing effect for hero tagline
+const typingText = document.getElementById('typing-text');
+if (typingText) {
+    const phrases = [
+        'Data analysis that delivers useful insights.',
+        'AI/ML projects powered by LLMs and APIs.'
+    ];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeEffect() {
+        const current = phrases[wordIndex];
+        if (isDeleting) {
+            typingText.textContent = current.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            typingText.textContent = current.substring(0, charIndex + 1);
+            charIndex++;
+        }
+
+        let speed = isDeleting ? 40 : 85;
+        if (!isDeleting && charIndex === current.length) {
+            speed = 1400;
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % phrases.length;
+            speed = 400;
+        }
+        setTimeout(typeEffect, speed);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(typeEffect, 500);
+    });
+}
+
+// Time-based greeting for the AI avatar badge
+function setRobotGreeting() {
+    const greeting = document.getElementById('robot-greeting');
+    if (!greeting) return;
+
+    const hour = new Date().getHours();
+    let message = 'Hello';
+    if (hour < 12) message = 'Good morning';
+    else if (hour < 17) message = 'Good afternoon';
+    else if (hour < 21) message = 'Good evening';
+    else message = 'Good night';
+
+    greeting.textContent = message;
+}
+
 // Load saved theme
 document.addEventListener('DOMContentLoaded', function () {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -30,6 +83,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize animations and counters
     animateCountersAdvanced();
+
+    // Set contextual greeting on the hero badge
+    setRobotGreeting();
+
+    // Activate nav link highlighting based on scroll position
+    initActiveNavHighlight();
 });
 
 // Mobile Menu Toggle
@@ -98,6 +157,60 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Active nav highlighting on scroll
+function initActiveNavHighlight() {
+    const navLinks = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
+    const pairs = navLinks
+        .map(link => {
+            const id = link.getAttribute('href');
+            const section = document.querySelector(id);
+            return section ? { link, section } : null;
+        })
+        .filter(Boolean);
+
+    if (!pairs.length) return;
+
+    // IntersectionObserver for modern browsers
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(l => l.classList.remove('active'));
+                const activeLink = navLinks.find(l => l.getAttribute('href') === `#${id}`);
+                if (activeLink) activeLink.classList.add('active');
+            });
+        }, {
+            threshold: 0.18,
+            rootMargin: '-25% 0px -30% 0px' // looser margins so shorter sections (skills/projects/certs) register
+        });
+
+        pairs.forEach(({ section }) => observer.observe(section));
+    }
+
+    // Fallback + initial sync using scroll position
+    const updateOnScroll = () => {
+        const scrollPos = window.scrollY + (window.innerHeight * 0.32);
+        let currentId = null;
+        pairs.forEach(({ section }) => {
+            const top = section.offsetTop;
+            const height = section.offsetHeight;
+            if (scrollPos >= top && scrollPos < top + height) {
+                currentId = section.getAttribute('id');
+            }
+        });
+        if (currentId) {
+            navLinks.forEach(l => l.classList.remove('active'));
+            const activeLink = navLinks.find(l => l.getAttribute('href') === `#${currentId}`);
+            if (activeLink) activeLink.classList.add('active');
+        }
+    };
+
+    updateOnScroll();
+    window.addEventListener('scroll', updateOnScroll, { passive: true });
+}
+
+
 // Form submission
 function submitForm(event) {
     event.preventDefault();
@@ -131,13 +244,14 @@ window.addEventListener('scroll', function () {
     const nav = document.querySelector('nav');
     const progressBar = document.querySelector('.scroll-progress');
     const scrollTopBtn = document.querySelector('.scroll-to-top');
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
 
     // Navbar scroll effect
     if (window.scrollY > 100) {
-        nav.style.background = 'rgba(255, 255, 255, 0.95)';
+        nav.style.background = isDark ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.95)';
         nav.style.backdropFilter = 'blur(10px)';
     } else {
-        nav.style.background = 'var(--bg-white)';
+        nav.style.background = isDark ? 'var(--bg-white)' : 'var(--bg-white)';
         nav.style.backdropFilter = 'none';
     }
 
@@ -243,3 +357,157 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// Cursor glow tracking (native cursor stays visible)
+const cursorGlow = document.getElementById('cursor-glow');
+
+if (cursorGlow && window.matchMedia('(pointer: fine)').matches) {
+    window.addEventListener('mousemove', (e) => {
+        const posX = e.clientX;
+        const posY = e.clientY;
+        cursorGlow.style.top = `${posY}px`;
+        cursorGlow.style.left = `${posX}px`;
+
+        const target = e.target;
+        const isInteractive = target.tagName.toLowerCase() === 'a' ||
+            target.tagName.toLowerCase() === 'button' ||
+            target.closest('a') ||
+            target.closest('button') ||
+            target.classList.contains('cta-button');
+
+        const dark = document.body.getAttribute('data-theme') === 'dark';
+        const baseShadow = dark ? '0 0 18px 6px rgba(56, 189, 248, 0.5)' : '0 0 18px 6px rgba(118, 75, 162, 0.45)';
+        const hoverShadow = dark ? '0 0 24px 8px rgba(56, 189, 248, 0.6)' : '0 0 24px 8px rgba(118, 75, 162, 0.55)';
+
+        if (isInteractive) {
+            cursorGlow.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            cursorGlow.style.boxShadow = hoverShadow;
+        } else {
+            cursorGlow.style.transform = 'translate(-50%, -50%) scale(1)';
+            cursorGlow.style.boxShadow = baseShadow;
+        }
+    });
+}
+
+// Particle background
+const bgCanvas = document.getElementById('bg-canvas');
+
+if (bgCanvas) {
+    const ctx = bgCanvas.getContext('2d');
+    let particles = [];
+
+    const isDarkMode = () => document.body.getAttribute('data-theme') === 'dark';
+
+    const mouse = {
+        x: null,
+        y: null,
+        radius: 0
+    };
+
+    function setCanvasSize() {
+        bgCanvas.width = window.innerWidth;
+        bgCanvas.height = window.innerHeight;
+        mouse.radius = (bgCanvas.height / 80) * (bgCanvas.width / 80);
+    }
+
+    function Particle(x, y, directionX, directionY, size) {
+        this.x = x;
+        this.y = y;
+        this.directionX = directionX;
+        this.directionY = directionY;
+        this.size = size;
+    }
+
+    Particle.prototype.draw = function () {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+        const fill = isDarkMode() ? 'rgba(56, 189, 248, 0.5)' : 'rgba(37, 99, 235, 0.5)';
+        ctx.fillStyle = fill;
+        ctx.fill();
+    };
+
+    Particle.prototype.update = function () {
+        if (this.x > bgCanvas.width || this.x < 0) this.directionX = -this.directionX;
+        if (this.y > bgCanvas.height || this.y < 0) this.directionY = -this.directionY;
+
+        this.x += this.directionX;
+        this.y += this.directionY;
+        this.draw();
+    };
+
+    function initParticles() {
+        particles = [];
+        let count = (bgCanvas.height * bgCanvas.width) / 9000;
+        if (count > 120) count = 120;
+
+        for (let i = 0; i < count; i++) {
+            const size = (Math.random() * 2) + 1;
+            const x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+            const y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+            const directionX = (Math.random() * 1) - 0.5;
+            const directionY = (Math.random() * 1) - 0.5;
+            particles.push(new Particle(x, y, directionX, directionY, size));
+        }
+    }
+
+    function connectParticles() {
+        const nodes = [...particles];
+        let hasMouse = false;
+        if (mouse.x !== null && mouse.y !== null) {
+            nodes.push({ x: mouse.x, y: mouse.y });
+            hasMouse = true;
+        }
+
+        const maxDistSq = 180 * 180;
+        for (let a = 0; a < nodes.length; a++) {
+            for (let b = a + 1; b < nodes.length; b++) {
+                const dx = nodes[a].x - nodes[b].x;
+                const dy = nodes[a].y - nodes[b].y;
+                const distSq = dx * dx + dy * dy;
+
+                if (distSq < maxDistSq) {
+                    let opacity = 1 - (distSq / maxDistSq);
+                    const mouseLink = hasMouse && (a === nodes.length - 1 || b === nodes.length - 1);
+                    opacity *= mouseLink ? 0.8 : 0.45;
+                    const stroke = isDarkMode()
+                        ? `rgba(56, 189, 248, ${opacity})`
+                        : `rgba(37, 99, 235, ${opacity})`;
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = mouseLink ? 1.5 : 1;
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[a].x, nodes[a].y);
+                    ctx.lineTo(nodes[b].x, nodes[b].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+        }
+        connectParticles();
+    }
+
+    setCanvasSize();
+    initParticles();
+    animate();
+
+    window.addEventListener('resize', () => {
+        setCanvasSize();
+        initParticles();
+    });
+
+    window.addEventListener('mousemove', (event) => {
+        mouse.x = event.x;
+        mouse.y = event.y;
+    });
+
+    window.addEventListener('mouseout', () => {
+        mouse.x = null;
+        mouse.y = null;
+    });
+}
